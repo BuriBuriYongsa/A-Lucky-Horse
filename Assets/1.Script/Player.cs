@@ -49,21 +49,27 @@ public class Player : MonoBehaviour
         {
             saveSpeed = speed * 1.3f;
             isRunning = true;
+            Debug.Log("isRunning: " + isRunning);
         }
         else if (context.canceled)
         {
             saveSpeed = speed;
             isRunning = false;
+            Debug.Log("isRunning: " + isRunning);
         }
     }
+    void FootR() { }
+    void FootL() { }
     void Move()
     {
         Vector3 moveVec = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
         transform.position += moveVec * saveSpeed * Time.fixedDeltaTime;
 
-        anim.SetBool("isWalk", moveVec != Vector3.zero);
+        anim.SetBool("isWalk", moveVec != Vector3.zero && !isRunning);
         anim.SetBool("isRun", isRunning && moveVec != Vector3.zero);
 
+        if (moveVec != Vector3.zero) anim.SetBool("isWalk", true);
+        else if (isRunning) anim.SetBool("isRun", false);
         transform.LookAt(transform.position + moveVec);
 
         /*rb.MovePosition(rb.position + transform.TransformDirection(move));
