@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
+using System.Collections.Generic;
 
 
 public class Player : MonoBehaviour
 {
     [Header("이동 설정")]
-    private float currentSpeed = 0;
     private Vector2 moveInput;
     [Tooltip("이동 속도")] public float speed;
     [Tooltip("회전 속도")] public float turnSpeed;
@@ -13,12 +14,14 @@ public class Player : MonoBehaviour
     private float saveSpeed;
     private bool isRunning = false;
     private Animator anim;
+    private Scanner scanner;
 
 
     private Rigidbody rb;
 
     void Awake()
     {
+        scanner = GetComponent<Scanner>();
         saveSpeed = speed;
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
@@ -36,8 +39,8 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         Move();
+        
     }
-
     public void GetInput(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -70,7 +73,9 @@ public class Player : MonoBehaviour
 
         if (moveVec != Vector3.zero) anim.SetBool("isWalk", true);
         else if (isRunning) anim.SetBool("isRun", false);
-        transform.LookAt(transform.position + moveVec);
+        
+        if (scanner.enemyTarget != null) transform.LookAt(scanner.enemyTarget);
+        else if (moveVec != Vector3.zero && scanner.enemyTarget == null) transform.LookAt(transform.position + moveVec);
 
         /*rb.MovePosition(rb.position + transform.TransformDirection(move));
 
