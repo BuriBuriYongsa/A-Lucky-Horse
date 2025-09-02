@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Wood
   - Bullet
+  - Floor
   layers:
   - Default
   - TransparentFX

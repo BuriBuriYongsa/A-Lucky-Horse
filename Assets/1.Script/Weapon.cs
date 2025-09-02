@@ -2,7 +2,16 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public int damage;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Floor" && collision.gameObject.tag == "Wood")
+        {
+            Destroy(gameObject, 2);
+        }
+        
+    }
     void Start()
     {
         
