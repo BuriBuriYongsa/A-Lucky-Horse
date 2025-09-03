@@ -2,11 +2,17 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision)
+    [Tooltip("데미지")] public int damage;
+    [Tooltip("넉백 세기")] public float knockB;
+    
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.tag == "Floor" ||
-            collision.gameObject.tag == "Wood" ||
-            collision.gameObject.tag == "Enemy")
+        if (other.CompareTag("Floor") ||
+            other.CompareTag("Wood"))
+        {
+            Destroy(gameObject,2);
+        }
+        else if(other.CompareTag("Enemy"))
         {
             Destroy(gameObject);
         }

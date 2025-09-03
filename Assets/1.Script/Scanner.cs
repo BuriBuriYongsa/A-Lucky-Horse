@@ -5,12 +5,12 @@ public class Scanner : MonoBehaviour
 {
 
     [Header("공격 설정")]
-    public Transform bullet;
     public float attackRange;
     public LayerMask enemyLayer;
-    public RaycastHit[] enemysHit;
+    public Collider[] enemys;
     public Transform enemyTarget;
 
+    private Transform nextEnemyTarget;
     public bool attack;
     private Animator anim;
 
@@ -18,12 +18,19 @@ public class Scanner : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
     }
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        enemysHit = Physics.SphereCastAll(transform.position, attackRange, Vector3.forward, 0, enemyLayer);
+        enemys = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
+
         enemyTarget = GetNearestEnemy();
+        
         if (enemyTarget != null)
         {
             anim.SetBool("isAttack", true);
@@ -35,16 +42,6 @@ public class Scanner : MonoBehaviour
             anim.SetBool("isAttack", false);
         }
     }
-    public void Hit()
-    {
-        // 공격 타이밍에 맞춰 데미지 주기, 투사체 발사 등 원하는 동작
-        Debug.Log("Hit! " + enemyTarget);
-
-        if (!enemyTarget) return;
-
-        bullet.position = transform.position;
-        bullet.LookAt(enemyTarget);
-    }
     
 
     Transform GetNearestEnemy()
@@ -52,7 +49,7 @@ public class Scanner : MonoBehaviour
         Transform result = null;
         float diff = 100f;
 
-        foreach (RaycastHit enemy in enemysHit)
+        foreach (Collider enemy in enemys)
         {
             Vector3 myPos = transform.position;
             Vector3 enemyPos = enemy.transform.position;

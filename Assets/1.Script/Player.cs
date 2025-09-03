@@ -15,14 +15,16 @@ public class Player : MonoBehaviour
     private float saveSpeed;
     private bool isRunning = false;
     private Animator anim;
-    public Scanner scanner;
 
+    public Scanner scanner;
+    public Weapon weapon;
 
     private Rigidbody rb;
 
     void Awake()
     {
         scanner = GetComponent<Scanner>();
+        weapon = GetComponent<Weapon>();
         saveSpeed = speed;
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
