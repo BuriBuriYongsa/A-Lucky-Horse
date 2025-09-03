@@ -2,42 +2,20 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    public float damage;
-    public int per;
-
-    Rigidbody rigid;
-    void Awake()
-    {
-        rigid = GetComponent<Rigidbody>();
-    }
-
-    public void Init(float damage, int per, Vector3 dir)
-    {
-        this.damage = damage;
-        this.per = per;
-        
-        if(per > -1)
-        {
-            rigid.angularVelocity = dir;
-        }
-    }
+    [Tooltip("데미지")] public int damage;
+    [Tooltip("넉백 세기")] public float knockB;
+    
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Enemy") || per == -1)
-            return;
-
-        per--;
-
-        if(per == -1)
+        if (other.CompareTag("Floor") ||
+            other.CompareTag("Wood"))
         {
-            rigid.angularVelocity = Vector3.zero;
-            gameObject.SetActive(false);
+            Destroy(gameObject,2);
         }
-    }
+        else if(other.CompareTag("Enemy"))
+        {
+            Destroy(gameObject);
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
