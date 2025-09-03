@@ -5,8 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Wood
-  - Bullet
   - Floor
+  - Enemy
+  - Arrow
   layers:
   - Default
   - TransparentFX

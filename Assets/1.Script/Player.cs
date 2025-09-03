@@ -10,11 +10,12 @@ public class Player : MonoBehaviour
     private Vector2 moveInput;
     [Tooltip("이동 속도")] public float speed;
     [Tooltip("회전 속도")] public float turnSpeed;
+    public int per;
 
     private float saveSpeed;
     private bool isRunning = false;
     private Animator anim;
-    private Scanner scanner;
+    public Scanner scanner;
 
 
     private Rigidbody rb;
@@ -39,7 +40,12 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         Move();
-        
+        if(scanner.attack)
+        {
+            saveSpeed = speed;
+            isRunning = false;
+        }
+
     }
     public void GetInput(InputAction.CallbackContext context)
     {
@@ -48,18 +54,21 @@ public class Player : MonoBehaviour
     }
     public void OnRun(InputAction.CallbackContext context)
     {
+        if(scanner.attack) return;
+
         if (context.started)
         {
-            saveSpeed = speed * 1.3f;
+            saveSpeed = speed * 1.5f;
             isRunning = true;
-            Debug.Log("isRunning: " + isRunning);
+           
         }
         else if (context.canceled)
         {
             saveSpeed = speed;
             isRunning = false;
-            Debug.Log("isRunning: " + isRunning);
+            
         }
+
     }
     void FootR() { }
     void FootL() { }
@@ -77,21 +86,7 @@ public class Player : MonoBehaviour
         if (scanner.enemyTarget != null) transform.LookAt(scanner.enemyTarget);
         else if (moveVec != Vector3.zero && scanner.enemyTarget == null) transform.LookAt(transform.position + moveVec);
 
-        /*rb.MovePosition(rb.position + transform.TransformDirection(move));
-
-        float turn = moveInput.x * turnSpeed * Time.fixedDeltaTime;
-        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
-        rb.MoveRotation(rb.rotation * turnRotation);/*
-
-        /*if (moveInput.y == 0 && moveInput.x == 0) currentSpeed = 0;
-        else currentSpeed = moveInput.y * speed;
-
-        Vector3 move = transform.forward * (currentSpeed * Time.fixedDeltaTime);
+       
         
-        rb.MovePosition(rb.position + move);
-
-        float turn = moveInput.x * turnSpeed * Time.fixedDeltaTime;
-        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
-        rb.MoveRotation(rb.rotation * turnRotation);*/
     }
 }

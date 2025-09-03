@@ -11,7 +11,7 @@ public class Scanner : MonoBehaviour
     public RaycastHit[] enemysHit;
     public Transform enemyTarget;
 
-
+    public bool attack;
     private Animator anim;
 
     void Start()
@@ -27,9 +27,11 @@ public class Scanner : MonoBehaviour
         if (enemyTarget != null)
         {
             anim.SetBool("isAttack", true);
+            attack = true;
         }
         else
         {
+            attack = false;
             anim.SetBool("isAttack", false);
         }
     }
