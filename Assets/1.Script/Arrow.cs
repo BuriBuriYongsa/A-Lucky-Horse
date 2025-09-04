@@ -10,10 +10,12 @@ public class Arrow : MonoBehaviour
         if (other.CompareTag("Floor") ||
             other.CompareTag("Wood"))
         {
+            GetComponent<BoxCollider>().enabled = false;
             Destroy(gameObject,2);
         }
         else if(other.CompareTag("Enemy"))
         {
+            GetComponent<BoxCollider>().enabled = false;
             Destroy(gameObject);
         }
 

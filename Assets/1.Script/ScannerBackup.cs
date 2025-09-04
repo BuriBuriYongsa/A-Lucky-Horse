@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Scanner : MonoBehaviour
+public class ScannerBackup : MonoBehaviour
 {
 
     [Header("공격 설정")]
@@ -34,9 +34,10 @@ public class Scanner : MonoBehaviour
 
         enemyTarget = GetNearestEnemy();
         
-        if (enemyTarget != null && !player.isRunning)
+        if (enemyTarget != null)
         {
             anim.SetBool("isAttack", true);
+            transform.LookAt(enemyTarget);
             attack = true;
         }
         else

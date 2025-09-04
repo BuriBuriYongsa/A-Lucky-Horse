@@ -472,6 +472,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5119130844109815903}
   - component: {fileID: 7364846381129378201}
+  - component: {fileID: 1458809202770301850}
   m_Layer: 10
   m_Name: Spear
   m_TagString: Enemy
@@ -515,6 +516,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 8.363372, y: 295.40308, z: 28.436483}
   m_Center: {x: -3.6815157, y: 47.210556, z: 2.7061462}
+--- !u!114 &1458809202770301850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4604675008362853143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fdfbe71227609f4dae75ae698ab5ce7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
 --- !u!1 &4619121492660842616
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,7 +540,6 @@ GameObject:
   - component: {fileID: 4308264437669441745}
   - component: {fileID: 2225101171710164526}
   - component: {fileID: 7641059171195740669}
-  - component: {fileID: 1227187371772392425}
   - component: {fileID: 6686620175734416113}
   - component: {fileID: 1780664940476054013}
   m_Layer: 10
@@ -596,33 +609,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.4702485, y: 2.064217, z: 1.2716115}
   m_Center: {x: 0.005710274, y: 1.0207219, z: 0.12400687}
---- !u!54 &1227187371772392425
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4619121492660842616}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &6686620175734416113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,6 +626,7 @@ MonoBehaviour:
   damage: 0
   target: {fileID: 0}
   attackDis: 0
+  coinY: {fileID: 7701414372014511477, guid: 6d8e892baa10a2243807de184bc30e7e, type: 3}
 --- !u!195 &1780664940476054013
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -1,21 +1,20 @@
-using System.Collections;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class WeaponBack : MonoBehaviour
 {
     [Header("화살 조정")]
     [Tooltip("화살")] public GameObject arrows;
     [Tooltip("스피드")] public float speed;
+
     public Transform arrowTrans;
 
-    float timer;
+    Scanner scanner;
 
-   
-    
+
 
     void Awake()
     {
-       
+       scanner = GetComponentInParent<Scanner>();
     }
     void Start()
     {
@@ -24,19 +23,17 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-     
+       
     }
- 
+
 
     public void Shot()
     {
         GameObject arrow = Instantiate(arrows, arrowTrans.position, arrowTrans.rotation);
         Rigidbody arrowRigid = arrow.GetComponent<Rigidbody>();
 
-        arrowRigid.useGravity = true;               
-        arrowRigid.linearVelocity = arrowTrans.forward * speed; 
+        arrowRigid.useGravity = true;
+        arrowRigid.linearVelocity = arrowTrans.forward * speed;
     }
 
-   
-    
 }

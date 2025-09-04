@@ -11,18 +11,24 @@ public class Enemy : MonoBehaviour
     public float damage;
     public Transform target;
     public float attackDis;
+    [Tooltip("Yellow ÄÚÀÎ")] public GameObject coinY;
 
     private NavMeshAgent agent;
     private Animator anim;
     private float distance;
-
-    bool isLive = true;
+    private bool isDed;
 
     Arrow arrow;
+
+    void Awake()
+    {
+       
+    }
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -36,16 +42,22 @@ public class Enemy : MonoBehaviour
             Debug.Log("Enemy HP: " + hp);
             if (hp <= 0)
             {
-                Destroy(gameObject);
-                isLive = false;
+                isDed = true;
+                agent.isStopped = true;
+                GetComponent<BoxCollider>().enabled = false;
+                GameObject coinDrop = Instantiate(coinY, transform.position, Quaternion.identity);
+                anim.SetBool("isLive", false);
+                Destroy(gameObject , 1);     
             }
         }
     }
 
     void Update()
     {
+        if (isDed) return;
+
         distance = Vector3.Distance(agent.transform.position, target.position);
-        if((distance <= attackDis) && isLive)
+        if((distance <= attackDis))
         {
             agent.isStopped = true;
             anim.SetBool("isAttack", true);
