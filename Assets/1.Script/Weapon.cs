@@ -10,12 +10,12 @@ public class Weapon : MonoBehaviour
 
     float timer;
 
-    public Player player;
+   
     
 
     void Awake()
     {
-        player = GetComponentInParent<Player>();
+       
     }
     void Start()
     {

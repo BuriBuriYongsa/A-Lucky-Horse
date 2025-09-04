@@ -14,9 +14,12 @@ public class Scanner : MonoBehaviour
     public bool attack;
     private Animator anim;
 
+    Player player;
+
     void Start()
     {
         anim = GetComponentInChildren<Animator>();
+        player = GetComponent<Player>();
     }
     void OnDrawGizmosSelected()
     {
@@ -31,7 +34,7 @@ public class Scanner : MonoBehaviour
 
         enemyTarget = GetNearestEnemy();
         
-        if (enemyTarget != null)
+        if (enemyTarget != null && !player.isRunning)
         {
             anim.SetBool("isAttack", true);
             attack = true;

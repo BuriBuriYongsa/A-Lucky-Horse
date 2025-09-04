@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     public int per;
 
     private float saveSpeed;
-    private bool isRunning = false;
+    public bool isRunning = false;
     private Animator anim;
 
     public Scanner scanner;
@@ -56,8 +56,7 @@ public class Player : MonoBehaviour
     }
     public void OnRun(InputAction.CallbackContext context)
     {
-        if(scanner.attack) return;
-
+        
         if (context.started)
         {
             saveSpeed = speed * 1.5f;
@@ -85,10 +84,8 @@ public class Player : MonoBehaviour
         if (moveVec != Vector3.zero) anim.SetBool("isWalk", true);
         else if (isRunning) anim.SetBool("isRun", false);
         
-        if (scanner.enemyTarget != null) transform.LookAt(scanner.enemyTarget);
-        else if (moveVec != Vector3.zero && scanner.enemyTarget == null) transform.LookAt(transform.position + moveVec);
+        if (scanner.enemyTarget != null && !isRunning) transform.LookAt(scanner.enemyTarget);
+        else if (moveVec != Vector3.zero) transform.LookAt(transform.position + moveVec);
 
-       
-        
     }
 }

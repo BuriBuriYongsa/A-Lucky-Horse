@@ -681,6 +681,7 @@ MonoBehaviour:
   damage: 0
   target: {fileID: 0}
   attackDis: 0
+  coinY: {fileID: 7701414372014511477, guid: 6d8e892baa10a2243807de184bc30e7e, type: 3}
 --- !u!1 &6758458677239691624
 GameObject:
   m_ObjectHideFlags: 0
