@@ -16,7 +16,7 @@ public class Arrow : MonoBehaviour
         else if(other.CompareTag("Enemy"))
         {
             GetComponent<BoxCollider>().enabled = false;
-            Destroy(gameObject,2);
+            Destroy(gameObject);
         }
 
     }

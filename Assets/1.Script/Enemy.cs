@@ -19,6 +19,11 @@ public class Enemy : MonoBehaviour
     private bool isDed;
 
     Arrow arrow;
+
+    void Awake()
+    {
+       
+    }
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
