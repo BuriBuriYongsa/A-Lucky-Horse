@@ -607,8 +607,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.4702485, y: 2.064217, z: 1.2716115}
-  m_Center: {x: 0.005710274, y: 1.0207219, z: 0.12400687}
+  m_Size: {x: 1.4702486, y: 2.064217, z: 2.008562}
+  m_Center: {x: 0.005710274, y: 1.0207219, z: 0.4924822}
 --- !u!114 &6686620175734416113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,12 +621,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e3019b73ee4ad4a858ce934584b992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  hp: 0
-  damage: 0
+  speed: 1.5
+  hp: 100
+  damage: 5
   target: {fileID: 0}
-  attackDis: 0
+  attackDis: 0.5
   coinY: {fileID: 7701414372014511477, guid: 6d8e892baa10a2243807de184bc30e7e, type: 3}
+  coinS: {fileID: 5779625137828275813, guid: ce459b740ef086a4d8aa8c044e744f7c, type: 3}
+  coinDrop: 4
+  ramdomPro: 30
+  speedCnt: 0
+  damageCnt: 0
+  maxHpCnt: 0
 --- !u!195 &1780664940476054013
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -10,9 +10,7 @@ public class Weapon : MonoBehaviour
 
     float timer;
 
-   
-    
-
+    public WeaponBack[] back;
     void Awake()
     {
        
@@ -34,7 +32,17 @@ public class Weapon : MonoBehaviour
         Rigidbody arrowRigid = arrow.GetComponent<Rigidbody>();
 
         arrowRigid.useGravity = true;               
-        arrowRigid.linearVelocity = arrowTrans.forward * speed; 
+        arrowRigid.linearVelocity = arrowTrans.forward * speed;
+        if (back != null)
+        {
+            for(int i = 0; i< back.Length; i++)
+            {
+                if (back[i].gameObject.activeSelf)
+                {
+                    back[i].Shot();
+                }
+            }
+        }
     }
 
    

@@ -9,6 +9,9 @@ TagManager:
   - Enemy
   - Arrow
   - Coin
+  - Defense
+  - RandomBox
+  - Heart
   layers:
   - Default
   - TransparentFX
@@ -18,8 +21,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Player
+  - Box
   - Enemy
   - 
   - 

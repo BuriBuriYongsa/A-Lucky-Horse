@@ -12,16 +12,31 @@ public class Player : MonoBehaviour
     [Tooltip("회전 속도")] public float turnSpeed;
     [Header("플레이어 상태")]
     [Tooltip("체력")] public float curHp = 100;
+    [Tooltip("최대체력")]public float maxHp = 100;
+    [Header("아이템")]
+    [Tooltip("현재 코인")]public int curCoin = 0;
+    [Tooltip("분신 화살")] public GameObject[] bows;
+    [Tooltip("분신 어시스트")] public GameObject[] assists;
 
-    public float maxHp = 100;
-    public int curCoin = 0;
-  
     public bool isRunning = false;
+    public bool isTouch = false;
+    public bool isFloor;
 
+    public int hpUpcnt = 0;
+    public int dmgUpcnt = 0;
+    public int arrowSpeedUpcnt = 0;
+    public int moveUpcnt = 0;
+    public int assistCnt = 0;
+    public int arrowPlusCnt = 0;
+
+    string boxName = "";
     float enemydmg;
     float saveSpeed;
     bool OnDmg = false;
 
+    public RandomBox randomBox;
+    public GameManager gManager;
+    public WeaponBack weaponBack;
     Animator anim;
     MeshRenderer[] meshs;
     Scanner scanner;
@@ -45,13 +60,13 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+
     }
-    
+
     void FixedUpdate()
     {
-        Move();
-        if(scanner.attack)
+        if(gManager.gameStart) Move();
+        if (scanner.attack)
         {
             saveSpeed = speed;
             isRunning = false;
@@ -61,24 +76,34 @@ public class Player : MonoBehaviour
     public void GetInput(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
-        Debug.Log("moveInput: " + moveInput);
     }
     public void OnRun(InputAction.CallbackContext context)
     {
-        
+
         if (context.started)
         {
             saveSpeed = speed * 1.5f;
             isRunning = true;
-           
+
         }
         else if (context.canceled)
         {
             saveSpeed = speed;
             isRunning = false;
-            
+
         }
 
+    }
+    public void OnTouch(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            isTouch = true;
+        }
+        else if (context.canceled)
+        {
+            isTouch = false;
+        }
     }
     void Move()
     {
@@ -90,18 +115,29 @@ public class Player : MonoBehaviour
 
         if (moveVec != Vector3.zero) anim.SetBool("isWalk", true);
         else if (isRunning) anim.SetBool("isRun", false);
-        
+
         if (scanner.enemyTarget != null && !isRunning) transform.LookAt(scanner.enemyTarget);
         else if (moveVec != Vector3.zero) transform.LookAt(transform.position + moveVec);
 
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-      
-        if (other.CompareTag("Enemy"))
+
+        if (other.CompareTag("Coin"))
         {
-            Enemy enemy = other.GetComponent<Enemy>();
+            Coin coin = other.GetComponent<Coin>();
+            if (coin != null)
+            {
+                curCoin += coin.value;
+            }
+        }
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             if (enemy != null && !OnDmg)
             {
                 enemydmg = enemy.damage;
@@ -112,19 +148,20 @@ public class Player : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
-        if(other.CompareTag("Coin"))
+        if (collision.gameObject.CompareTag("RandomBox") && isTouch && curCoin >= 500 && !randomBox.isOpen)
         {
-            Coin coin = other.GetComponent<Coin>();
-            if (coin != null)
-            {
-                curCoin += coin.value;
-            }
+            curCoin -= 500;
+            randomBox.Gacha();
+            Debug.Log(boxName);
+
         }
+        if (collision.gameObject.CompareTag("Floor")) isFloor = true;
+        else isFloor = false;
     }
     IEnumerator OnDamage()
     {
         OnDmg = true;
-        foreach(MeshRenderer mesh in meshs)
+        foreach (MeshRenderer mesh in meshs)
         {
             Material mat = mesh.material;
             mat.color = Color.red;
@@ -141,6 +178,72 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1f);
         OnDmg = false;
     }
-   
+    public void UpGrade(string str)
+    {
+        switch (str)
+        {
+            case "ArrowPlus": //활 개수 업
+                if (arrowPlusCnt == 2)
+                {
+                    for (int i = 0; i < arrowPlusCnt; i++)
+                    {
+                        weaponBack = bows[i].GetComponent<WeaponBack>();
+                        weaponBack.arrows.GetComponent<Arrow>().damage += 1;
+                    }
+                   
+                }
+                else
+                {
+                    weapon.speed += 2f;
+                    arrowPlusCnt++;
+                    bows[arrowPlusCnt].SetActive(true);
+                }
+                break;
+            case "Assist": //어시스트 멤버 추가
+                if(assistCnt == 4)
+                {
+                    for (int i = 0; i < assistCnt; i++)
+                    {
+                        weaponBack = assists[i].GetComponent<WeaponBack>();
+                        weaponBack.arrows.GetComponent<Arrow>().damage += 1;
+                    }
+                }
+                else
+                {
+                    assistCnt++;
+                    assists[assistCnt].SetActive(true);
+                }
+                break;
+            case "MaxHpUp"://체력 업
+                if (maxHp > 500) return;
+                else
+                {
+                    hpUpcnt++;
+                    maxHp += 20f;
+                }
+                break;
+            case "DamageUp"://데미지 업
+                weapon.arrows.GetComponent<Arrow>().damage += 1;
+                dmgUpcnt++;
+                break;
+            case "ArrowSpeedUp"://화살 속도 업
+                if (weapon.speed > 50f) return;
+                else
+                {
+                    weapon.speed += 5f;
+                    arrowSpeedUpcnt++;
+                }
+                break;
+            case "MoveUp"://이동 속도 업
+                if (speed >= 5f) return;
+                else
+                {
+                    moveUpcnt++;
+                    speed += 0.2f;
+                    turnSpeed += 0.2f;
+                }
+                break;
+        }
+    }
 }
 
