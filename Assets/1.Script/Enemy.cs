@@ -12,17 +12,30 @@ public class Enemy : MonoBehaviour
     public Transform target;
     public float attackDis;
     [Tooltip("Yellow 코인")] public GameObject coinY;
+    [Tooltip("Silver 코인")] public GameObject coinS;
+
+    [Tooltip(" 몬스터별 Coin 확률")] public int coinDrop;
+    [Tooltip(" YellowCoin 확률")]public int ramdomPro;
+
+    public int speedCnt = 0;
+    public int damageCnt = 0;
+    public int maxHpCnt = 0;
 
     private NavMeshAgent agent;
     private Animator anim;
     private float distance;
     private bool isDed;
 
+
     Arrow arrow;
 
     void Awake()
     {
-       
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            target = playerObj.transform;
+        }
     }
     void Start()
     {
@@ -33,6 +46,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+   
         arrow = other.GetComponent<Arrow>();
         Vector3 kcockBack = transform.position - other.transform.position;
         if (other.CompareTag("Arrow"))
@@ -42,10 +56,23 @@ public class Enemy : MonoBehaviour
             Debug.Log("Enemy HP: " + hp);
             if (hp <= 0)
             {
+                int cRand = Random.Range(1, coinDrop);
+                for (int i=1; i<=cRand; i++)
+                {
+                    int yRand = Random.Range(1, 100);
+                    Vector3 randomVector = new Vector3(Random.Range(-0.2f, 0.2f), 0, Random.Range(-0.2f, 0.2f));
+                    if (yRand <= ramdomPro)
+                    {
+                        GameObject coin = Instantiate(coinY, transform.position + randomVector, Quaternion.identity);
+                    }
+                    else
+                    {
+                        GameObject coin = Instantiate(coinS, transform.position + randomVector, Quaternion.identity);
+                    }
+                }
                 isDed = true;
                 agent.isStopped = true;
                 GetComponent<BoxCollider>().enabled = false;
-                GameObject coinDrop = Instantiate(coinY, transform.position, Quaternion.identity);
                 anim.SetBool("isLive", false);
                 Destroy(gameObject , 1);     
             }
@@ -87,5 +114,6 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
     }
+    
 
 }

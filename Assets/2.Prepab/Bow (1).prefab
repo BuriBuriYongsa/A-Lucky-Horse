@@ -98,6 +98,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrows: {fileID: 3223259044082398957, guid: 45e0c49b0fad3cc46b75ac35571f0108, type: 3}
-  speed: 10
-  shotTimer: 2
+  speed: 8
   arrowTrans: {fileID: 0}
