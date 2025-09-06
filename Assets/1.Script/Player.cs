@@ -32,15 +32,19 @@ public class Player : MonoBehaviour
     string boxName = "";
     float enemydmg;
     float saveSpeed;
+    public int setBowDamage;
+    public int setAsisDamage;
+
     bool OnDmg = false;
 
     public RandomBox randomBox;
     public GameManager gManager;
-    public WeaponBack weaponBack;
+    public WeaponBack weaponBackBow;
+    public WeaponBack weaponBackAssis;
     Animator anim;
     MeshRenderer[] meshs;
     Scanner scanner;
-    Weapon weapon;
+    public Weapon weapon;
 
     private Rigidbody rb;
 
@@ -56,6 +60,11 @@ public class Player : MonoBehaviour
         {
             Debug.LogWarning("Animator component not found on " + gameObject.name);
         }
+        weaponBackBow = bows[0].GetComponent<WeaponBack>();
+        setBowDamage = weaponBackBow.arrows.GetComponent<Arrow>().damage;
+
+        weaponBackAssis = assists[0].GetComponentInChildren<WeaponBack>();
+        setAsisDamage = weaponBackAssis.arrows.GetComponent<Arrow>().damage;
     }
 
     void Start()
@@ -187,14 +196,13 @@ public class Player : MonoBehaviour
                 {
                     for (int i = 0; i < arrowPlusCnt; i++)
                     {
-                        weaponBack = bows[i].GetComponent<WeaponBack>();
-                        weaponBack.arrows.GetComponent<Arrow>().damage += 1;
+                        weaponBackBow = bows[i].GetComponent<WeaponBack>();
+                        weaponBackBow.arrows.GetComponent<Arrow>().damage += 1;
                     }
                    
                 }
                 else
                 {
-                    weapon.speed += 2f;
                     arrowPlusCnt++;
                     bows[arrowPlusCnt].SetActive(true);
                 }
@@ -204,8 +212,8 @@ public class Player : MonoBehaviour
                 {
                     for (int i = 0; i < assistCnt; i++)
                     {
-                        weaponBack = assists[i].GetComponent<WeaponBack>();
-                        weaponBack.arrows.GetComponent<Arrow>().damage += 1;
+                        weaponBackAssis = assists[i].GetComponent<WeaponBack>();
+                        weaponBackAssis.arrows.GetComponent<Arrow>().damage += 1;
                     }
                 }
                 else

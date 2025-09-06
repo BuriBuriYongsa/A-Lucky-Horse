@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
 
 
     Arrow arrow;
-
+    public EnemySpear enemySpear;
     void Awake()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -41,7 +41,7 @@ public class Enemy : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-        
+        enemySpear = GetComponent<EnemySpear>();
     }
 
     private void OnTriggerEnter(Collider other)
