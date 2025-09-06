@@ -74,6 +74,7 @@ public class EnemySpawn : MonoBehaviour
 
                     Enemy ene = Enemy.GetComponent<Enemy>();
                     ene.damage += damage;
+                    ene.enemySpear.damage += damage;
                     ene.speed += speed;
                     ene.hp += hp;
                 }
@@ -85,6 +86,7 @@ public class EnemySpawn : MonoBehaviour
 
                     Enemy ene = Enemy.GetComponent<Enemy>();
                     ene.damage += bigdamage;
+                    ene.enemySpear.damage += bigdamage;
                     ene.speed += bigspeed;
                     ene.hp += bighp;
                 }
@@ -116,8 +118,6 @@ public class EnemySpawn : MonoBehaviour
                 spawnsCnt++;
                 spawnsUp += 10;
                 break;
-
-
         }
     }
 }
