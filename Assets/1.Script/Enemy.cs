@@ -54,7 +54,6 @@ public class Enemy : MonoBehaviour
         {
             hp -= arrow.damage;
             StartCoroutine(KnockbackCoroutine(kcockBack, arrow.knockB, 0.1f));
-            Debug.Log("Enemy HP: " + hp);
             if (hp <= 0)
             {
                 int cRand = Random.Range(1, coinDrop);

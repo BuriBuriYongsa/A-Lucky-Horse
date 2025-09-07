@@ -192,9 +192,6 @@ public class GameManager : MonoBehaviour
         weaponBackAssis = player.assists[0].GetComponentInChildren<WeaponBack>();
         setAsisDamage = weaponBackAssis.arrows.GetComponent<Arrow>().damage;
 
-        Debug.Log(setBowDamage);
-        Debug.Log(setAsisDamage);
-
     }
     void resetting()
     {

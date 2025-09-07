@@ -55,11 +55,6 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         meshs = GetComponentsInChildren<MeshRenderer>();
-        if (anim == null)
-        {
-            Debug.LogWarning("Animator component not found on " + gameObject.name);
-        }
-        
     }
 
     void Start()
@@ -157,8 +152,6 @@ public class Player : MonoBehaviour
         {
             curCoin -= 500;
             randomBox.Gacha();
-            Debug.Log(boxName);
-
         }
         if (collision.gameObject.CompareTag("Floor")) isFloor = true;
         else isFloor = false;
@@ -172,7 +165,6 @@ public class Player : MonoBehaviour
             mat.color = Color.red;
         }
         curHp -= enemydmg;
-        Debug.Log(curHp);
         yield return new WaitForSeconds(0.1f);
 
         foreach (MeshRenderer mesh in meshs)
