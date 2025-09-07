@@ -683,6 +683,7 @@ MonoBehaviour:
   speedCnt: 0
   damageCnt: 0
   maxHpCnt: 0
+  gManager: {fileID: 0}
   enemySpear: {fileID: 6123518742020274639}
 --- !u!1 &6758458677239691624
 GameObject:

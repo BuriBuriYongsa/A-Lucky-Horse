@@ -14,11 +14,12 @@ public class Wood : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if(!gManager.stageStart)woodPanel.SetActive(true);
-            if (player.curCoin >= 200 && player.isTouch && !gManager.stageStart)
+            if(gManager.stageClear)woodPanel.SetActive(true);
+            if (player.curCoin >= 200 && player.isTouch && gManager.stageClear)
             {
                 player.curCoin -= 200;
                 Destroy(gameObject);
+                woodPanel.SetActive(false);
             }
         }
     }

@@ -633,6 +633,7 @@ MonoBehaviour:
   speedCnt: 0
   damageCnt: 0
   maxHpCnt: 0
+  gManager: {fileID: 0}
   enemySpear: {fileID: 1458809202770301850}
 --- !u!195 &1780664940476054013
 NavMeshAgent:

@@ -15,7 +15,7 @@ public class Defense : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
      void OnCollisionStay(Collision other)
     {
-        if (!gameManager.stageStart)
+        if (gameManager.stageClear)
         {
             if (other.gameObject.CompareTag("Player"))
             {   
@@ -27,6 +27,7 @@ public class Defense : MonoBehaviour
                     player.curCoin -= 500;
                     isDefense = false;
                     col.enabled = false;
+                    defPanel.SetActive(false);
                 }
                 else if (!isDefense)
                 {
@@ -35,16 +36,9 @@ public class Defense : MonoBehaviour
             }
         }
     }
-     void OnCollisionExit(Collision other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            defPanel.SetActive(false);
-        }
-    }
     void Update()
    {
-        if(gameManager.stageStart)
+        if(!gameManager.stageClear)
         {
             col.enabled = true;
         }

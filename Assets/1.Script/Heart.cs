@@ -7,13 +7,14 @@ public class Heart : MonoBehaviour
 
     void OnCollisionStay(Collision other)
     {
-        if (other.gameObject.tag == "Player" && player.curHp < 90)
+        if (other.gameObject.tag == "Player")
         {
             heartPanel.SetActive(true);
             if (player.curCoin >= 50 && player.isTouch)
             {
                 heartPanel.SetActive(true);
                 player.curHp += 10;
+                if(player.curHp >= 100)player.curHp = 100;
             }
            
         }

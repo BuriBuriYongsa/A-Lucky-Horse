@@ -39,8 +39,7 @@ public class Player : MonoBehaviour
 
     public RandomBox randomBox;
     public GameManager gManager;
-    public WeaponBack weaponBackBow;
-    public WeaponBack weaponBackAssis;
+    public WeaponBack weaponBack;
     Animator anim;
     MeshRenderer[] meshs;
     Scanner scanner;
@@ -60,11 +59,7 @@ public class Player : MonoBehaviour
         {
             Debug.LogWarning("Animator component not found on " + gameObject.name);
         }
-        weaponBackBow = bows[0].GetComponent<WeaponBack>();
-        setBowDamage = weaponBackBow.arrows.GetComponent<Arrow>().damage;
-
-        weaponBackAssis = assists[0].GetComponentInChildren<WeaponBack>();
-        setAsisDamage = weaponBackAssis.arrows.GetComponent<Arrow>().damage;
+        
     }
 
     void Start()
@@ -74,7 +69,8 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(gManager.gameStart) Move();
+        if (gManager.gameStart) Move();
+        else transform.position = new Vector3(0, 1, -1);
         if (scanner.attack)
         {
             saveSpeed = speed;
@@ -196,8 +192,8 @@ public class Player : MonoBehaviour
                 {
                     for (int i = 0; i < arrowPlusCnt; i++)
                     {
-                        weaponBackBow = bows[i].GetComponent<WeaponBack>();
-                        weaponBackBow.arrows.GetComponent<Arrow>().damage += 1;
+                        weaponBack = bows[i].GetComponent<WeaponBack>();
+                        weaponBack.arrows.GetComponent<Arrow>().damage += 1;
                     }
                    
                 }
@@ -212,8 +208,8 @@ public class Player : MonoBehaviour
                 {
                     for (int i = 0; i < assistCnt; i++)
                     {
-                        weaponBackAssis = assists[i].GetComponent<WeaponBack>();
-                        weaponBackAssis.arrows.GetComponent<Arrow>().damage += 1;
+                        weaponBack = assists[i].GetComponent<WeaponBack>();
+                        weaponBack.arrows.GetComponent<Arrow>().damage += 1;
                     }
                 }
                 else
@@ -247,8 +243,8 @@ public class Player : MonoBehaviour
                 else
                 {
                     moveUpcnt++;
-                    speed += 0.2f;
-                    turnSpeed += 0.2f;
+                    speed += 0.3f;
+                    turnSpeed += 0.3f;
                 }
                 break;
         }

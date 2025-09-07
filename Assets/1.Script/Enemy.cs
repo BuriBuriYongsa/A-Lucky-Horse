@@ -29,6 +29,7 @@ public class Enemy : MonoBehaviour
 
     Arrow arrow;
     public EnemySpear enemySpear;
+
     void Awake()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -82,7 +83,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         if (isDed) return;
-
+        
         distance = Vector3.Distance(agent.transform.position, target.position);
         if((distance <= attackDis))
         {
