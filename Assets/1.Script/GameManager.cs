@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 
 public class GameManager : MonoBehaviour
@@ -8,6 +10,8 @@ public class GameManager : MonoBehaviour
     public GameObject gamePanel;
     public GameObject stagePanel;
     public GameObject gameOverPanel;
+    public GameObject gameSuccesPanel;
+    public GameObject gameTimer;
     public Text coinTxt;
     public Text enemyTxt;
     public RectTransform hpImg;
@@ -21,6 +25,10 @@ public class GameManager : MonoBehaviour
     public Text enemySpeedUp;
     public Text enemyDmgUp;
     public Text enemySpawnUp;
+    public Text gameTimerText;
+
+    public int finalStage;
+
 
     [Tooltip("디펜스 오브젝트")] public GameObject defenses;
 
@@ -29,7 +37,7 @@ public class GameManager : MonoBehaviour
     float setHp;
     float setArrowSpeed;
     int setDamage;
-    int setAssistDamage;
+    int setAsisDamage;
     int setBowDamage;
 
     //"적 기본스탯
@@ -41,57 +49,96 @@ public class GameManager : MonoBehaviour
     float setBigEnemyHp;
     float setSqawn;
 
-    public bool gameStart;
-    public bool stageStart;
-    public bool gameOver;
+    public bool gameStart = false;
+    public bool stageClear;
     public int stageNum = 0;
+    bool stageReady = false;
 
     public static int enemys; 
 
     public Player player;
     public EnemySpawn enemySpawn;
+    public WeaponBack weaponBackBow;
+    public WeaponBack weaponBackAssis;
     private void Awake()
     {
+        stageClear = false;
         mainPanel.SetActive(true);
-        stagePanel.SetActive(false);
+        gameSuccesPanel.SetActive(false);
         gamePanel.SetActive(false);
+        stagePanel.SetActive(false);
         PlayerSetting();
     }
     public void GameStart()
     {
-        if (gameOver)
-        {
-            gameOverPanel.SetActive(false);
-            stageNum = 0;
-            gameOver = false;
-            resetting();
-        }
-        else
-        {
-            mainPanel.SetActive(false);
-        }
-        defenses.SetActive(true);
-        gameStart = true;
         mainPanel.SetActive(false);
-        stagePanel.SetActive(false);
+        defenses.SetActive(true);
         gamePanel.SetActive(true);
-        stageNum++;
-        StageSetting();
+        StartCoroutine(GameTimer());
+        
+    }
+    public void GameReStart()
+    {
+        resetting();
+        mainPanel.SetActive(true);
+        gameOverPanel.SetActive(false);
+        gameSuccesPanel.SetActive(false);
+        stagePanel.SetActive(false);
+        gamePanel.SetActive(false);
+        stageNum = 0;
+    }
+    public void GameSucces()
+    {
+        stageClear = false;
+        gameStart = false;
+        stageNum = 0;
+        GameObject[] coins = GameObject.FindGameObjectsWithTag("Coin");
+        foreach (GameObject coin in coins)
+        {
+            Destroy(coin);
+        }
+        gameSuccesPanel.SetActive(true);
+        stagePanel.SetActive(false);
+        gamePanel.SetActive(false);
+    }
+    public void NextStage()
+    {
+        stageReady = true;
+        stageClear = false;
+        stagePanel.SetActive(false);
+        StartCoroutine(GameTimer());
     }
 
-    void Start()
+    IEnumerator GameTimer()
     {
-        
+        gameTimer.SetActive(true);
+        gameTimerText.text = "3";
+        yield return new WaitForSeconds(1f);
+        gameTimerText.text = "2";
+        yield return new WaitForSeconds(1f);
+        gameTimerText.text = "1";
+        yield return new WaitForSeconds(1f);
+        gameTimerText.text = "Game Start!";
+        gameTimer.SetActive(false);
+        gameStart = true;
+        stageNum++;
+        enemySpawn.EnemyStage(stageNum);
+
     }
 
     void LateUpdate()
     {
         coinTxt.text = player.curCoin.ToString();
         enemys = GameObject.FindGameObjectsWithTag("Enemy").Length;
-        if (enemys == 0)
+        if (enemys == 0 && gameStart && !stageReady)
         {
+            if(stageNum >= finalStage && stageClear)
+            {
+                GameSucces();
+                return;
+            }
             defenses.SetActive(false);
-            stageStart = false;
+            stageClear = true;
             maxHp.text = player.hpUpcnt.ToString();
             arrowSpeedUp.text = player.arrowSpeedUpcnt.ToString();
             arrowDamageUp.text = player.dmgUpcnt.ToString();
@@ -101,33 +148,52 @@ public class GameManager : MonoBehaviour
             enemyMaxHp.text = enemySpawn.maxHpCnt.ToString();
             enemySpeedUp.text = enemySpawn.speedCnt.ToString();
             enemyDmgUp.text = enemySpawn.damageCnt.ToString();
-            enemyDmgUp.text = enemySpawn.spawnsCnt.ToString();
-            if (player.isFloor)stagePanel.SetActive(true);
-            else stagePanel.SetActive(false);
+            enemySpawnUp.text = enemySpawn.spawnsCnt.ToString();
+            if (player.isFloor && stageClear)stagePanel.SetActive(true);
         }
         enemyTxt.text = (enemys / 2).ToString();
 
         hpImg.localScale = new Vector3(player.curHp / player.maxHp, 1, 1);
         if (player.curHp <= 0)
         {
-            gameOver = true;
-            gameOverPanel.SetActive(true);
+            GameOver();
         }
         
     }
-   
-    void StageSetting()
+    
+    void GameOver()
     {
-        stageStart = true;
-        enemySpawn.EnemyStage(stageNum);
-    }
+        resetting();
+        GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach(GameObject enemy in enemys)
+        {
+            Destroy(enemy);
+        }
+        GameObject[] coins = GameObject.FindGameObjectsWithTag("Coin");
+        foreach (GameObject coin in coins)
+        {
+            Destroy(coin);
+        }
+        stageClear = false;
+        gameStart = false;
+        gameOverPanel.SetActive(true);
 
+    }
     void PlayerSetting()
     {
         setSpeed = player.speed;
         setHp = player.maxHp;
         setDamage = player.weapon.arrows.GetComponent<Arrow>().damage;
         setArrowSpeed = player.weapon.speed;
+
+        weaponBackBow = player.bows[0].GetComponent<WeaponBack>();
+        setBowDamage = weaponBackBow.arrows.GetComponent<Arrow>().damage;
+
+        weaponBackAssis = player.assists[0].GetComponentInChildren<WeaponBack>();
+        setAsisDamage = weaponBackAssis.arrows.GetComponent<Arrow>().damage;
+
+        Debug.Log(setBowDamage);
+        Debug.Log(setAsisDamage);
 
     }
     void resetting()
@@ -146,14 +212,14 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i <= 3; i++)
         {
             player.assists[i].SetActive(false);
-            player.weaponBackAssis = player.assists[i].GetComponentInChildren<WeaponBack>();
-            player.weaponBackAssis.arrows.GetComponent<Arrow>().damage = player.setAsisDamage;
+            weaponBackAssis = player.assists[i].GetComponentInChildren<WeaponBack>();
+            weaponBackAssis.arrows.GetComponent<Arrow>().damage = setAsisDamage;
         }
         for (int i = 0; i <= 1; i++)
         {
             player.bows[i].SetActive(false);
-            player.weaponBackBow = player.bows[i].GetComponent<WeaponBack>();
-            player.weaponBackBow.arrows.GetComponent<Arrow>().damage = player.setBowDamage;
+            weaponBackBow = player.bows[i].GetComponent<WeaponBack>();
+            weaponBackBow.arrows.GetComponent<Arrow>().damage = setBowDamage;
         }
         enemySpawn.bigspeed = 0;
         enemySpawn.speed = 0;
@@ -166,5 +232,6 @@ public class GameManager : MonoBehaviour
         enemySpawn.maxHpCnt = 0;
         enemySpawn.speedCnt = 0;
         enemySpawn.spawnsCnt = 0;
+
     }
 }

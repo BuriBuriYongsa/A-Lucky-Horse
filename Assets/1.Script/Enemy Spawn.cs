@@ -1,13 +1,16 @@
-using System.Drawing;
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemySpawn : MonoBehaviour
 {
     public Transform[] spawnPoint;
     public GameObject[] enemys;
     public GameObject bigEnemy;
+    public GameObject exEnemyPanel;
+    public Text exEnemy;
 
     public float speed;
     public float bigspeed;
@@ -23,44 +26,70 @@ public class EnemySpawn : MonoBehaviour
     public int damageCnt = 0;
     public int spawnsCnt = 0;
 
-    public int spawns;
-    public int bigspawns;
     
-    
+    public int basicSpawns = 0;
+    public int basicBigspawns = 0;
+
+    int exTotal = 6;
+    int exEneB = 2;
+    int exEne = 1;
+    bool exCheck = false;
     public GameManager gManager;
     void Start()
     {
-        
+        exEnemyPanel.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
-    {   
+    {
+        if(!exCheck && gManager.stageClear)
+        {
+            exCheck = true;
+            exEnemyPanel.SetActive(true);
+            UpdateNextEnemy(false);
+        }else if(!gManager.stageClear)
+        {
+            exCheck=false;
+            exEnemyPanel.SetActive(false);
+        }
     }
     
     
     public void EnemyStage(int stageNum)
-    {  
-        if (stageNum == 10) return;
+    {
+        int spawns = 0;
+        int bigspawns = 0;
+       
+        if (stageNum == 10 && !gManager.gameStart) return;
+        if(stageNum == 1)
+        {
+            basicSpawns = 0;
+            basicBigspawns = 0;
+        }
         if (stageNum < 3)
         {
-            spawns += 5;
-            bigspawns += 2;
+            spawns = 2;
+            bigspawns = 1;
         }
         else if (stageNum < 7)
         {
-            spawns += 10;
-            bigspawns += 5;
+            spawns = 3;
+            bigspawns = 2;
         }
         else
         {
-            spawns += 15;
-            bigspawns += 10;
+            spawns = 3;
+            bigspawns = 3;
         }
-        spawns += spawnsUp;
-        bigspawns += bigspawnsUp;
-        StartCoroutine(EnemySpawns(spawns, false));
-        StartCoroutine(EnemySpawns(bigspawns, true));
+        basicSpawns += spawns;
+        basicBigspawns += bigspawns;
+
+        int totalSpawns = basicSpawns + spawnsUp;
+        int totalBigspawns = basicBigspawns + bigspawnsUp;
+        
+        StartCoroutine(EnemySpawns(totalSpawns, false));
+        StartCoroutine(EnemySpawns(totalBigspawns, true));
     }
     public IEnumerator EnemySpawns(int spawns, bool big)
     {
@@ -100,8 +129,8 @@ public class EnemySpawn : MonoBehaviour
         switch (str)
         {
             case "EnemyMoveUp":
-                bigspeed += 0.3f;
-                speed += 0.5f;
+                bigspeed += 0.1f;
+                speed += 0.2f;
                 speedCnt++;
                 break;
             case "EnemyDamageUp":
@@ -116,8 +145,36 @@ public class EnemySpawn : MonoBehaviour
                 break;
             case "EnemySpownUp":
                 spawnsCnt++;
-                spawnsUp += 10;
+                spawnsUp += 2;
+                bigspawnsUp += 1;
+                UpdateNextEnemy(true);
                 break;
         }
+    }
+    public void UpdateNextEnemy(bool Gacha)
+    {
+        if (!Gacha)
+        {
+            if (gManager.stageNum+1 < 3)
+            {
+                exEne += 2;
+                exEneB += 1;
+            }
+            else if (gManager.stageNum+1 < 7)
+            {
+                exEne += 3;
+                exEneB += 2;
+            }
+            else
+            {
+                exEne += 3;
+                exEneB += 3;
+            }
+        }
+        exEne += spawnsUp;
+        exEneB += bigspawnsUp;
+        exTotal = (exEne + exEneB) * 2;
+
+        exEnemy.text = "Next Enemy " + exTotal;
     }
 }
