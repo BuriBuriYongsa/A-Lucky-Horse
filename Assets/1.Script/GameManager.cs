@@ -104,6 +104,7 @@ public class GameManager : MonoBehaviour
     public void NextStage()
     {
         stageReady = true;
+        defenses.SetActive(true);
         stageClear = false;
         stagePanel.SetActive(false);
         StartCoroutine(GameTimer());
@@ -128,15 +129,15 @@ public class GameManager : MonoBehaviour
 
     void LateUpdate()
     {
-        coinTxt.text = player.curCoin.ToString();
         enemys = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        if (stageNum == finalStage && enemys == 0)
+        {
+            GameSucces();
+            return;
+        }
+        coinTxt.text = player.curCoin.ToString();
         if (enemys == 0 && gameStart && !stageReady)
         {
-            if(stageNum >= finalStage && stageClear)
-            {
-                GameSucces();
-                return;
-            }
             defenses.SetActive(false);
             stageClear = true;
             maxHp.text = player.hpUpcnt.ToString();
@@ -206,6 +207,7 @@ public class GameManager : MonoBehaviour
         player.dmgUpcnt = 0;
         player.hpUpcnt = 0;
         player.moveUpcnt = 0;
+        player.curCoin = 0;
         for (int i = 0; i <= 3; i++)
         {
             player.assists[i].SetActive(false);

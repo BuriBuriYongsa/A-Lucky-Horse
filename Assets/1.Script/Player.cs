@@ -29,7 +29,6 @@ public class Player : MonoBehaviour
     public int assistCnt = 0;
     public int arrowPlusCnt = 0;
 
-    string boxName = "";
     float enemydmg;
     float saveSpeed;
     public int setBowDamage;

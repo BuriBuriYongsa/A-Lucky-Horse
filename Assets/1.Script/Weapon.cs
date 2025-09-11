@@ -7,10 +7,12 @@ public class Weapon : MonoBehaviour
     [Tooltip("화살")] public GameObject arrows;
     [Tooltip("스피드")] public float speed;
     public Transform arrowTrans;
+    public AudioSource audioS;
 
     float timer;
 
     public WeaponBack[] back;
+   
     void Awake()
     {
        
@@ -40,6 +42,7 @@ public class Weapon : MonoBehaviour
                 if (back[i].gameObject.activeSelf)
                 {
                     back[i].Shot();
+                    audioS.Play();
                 }
             }
         }
