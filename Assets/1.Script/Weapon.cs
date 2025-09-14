@@ -35,6 +35,7 @@ public class Weapon : MonoBehaviour
 
         arrowRigid.useGravity = true;               
         arrowRigid.linearVelocity = arrowTrans.forward * speed;
+        audioS.Play();
         if (back != null)
         {
             for(int i = 0; i< back.Length; i++)
@@ -42,7 +43,6 @@ public class Weapon : MonoBehaviour
                 if (back[i].gameObject.activeSelf)
                 {
                     back[i].Shot();
-                    audioS.Play();
                 }
             }
         }

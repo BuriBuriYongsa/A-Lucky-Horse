@@ -36,6 +36,13 @@ public class Defense : MonoBehaviour
             }
         }
     }
+    void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            defPanel.SetActive(false);
+        }
+    }
     void Update()
    {
         if(!gameManager.stageClear)

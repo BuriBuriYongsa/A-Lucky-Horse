@@ -1,7 +1,8 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class Player : MonoBehaviour
@@ -36,6 +37,7 @@ public class Player : MonoBehaviour
 
     bool OnDmg = false;
 
+    public AudioSource dmgAudio;
     public RandomBox randomBox;
     public GameManager gManager;
     public WeaponBack weaponBack;
@@ -137,9 +139,16 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            EnemySpear enemySpear = collision.gameObject.GetComponent<EnemySpear>();
+   
+
             if (enemy != null && !OnDmg)
             {
                 enemydmg = enemy.damage;
+                StartCoroutine(OnDamage());
+            }else if (enemySpear != null && !OnDmg)
+            {
+                enemydmg = enemySpear.damage;
                 StartCoroutine(OnDamage());
             }
             if (curHp <= 0)
@@ -158,6 +167,7 @@ public class Player : MonoBehaviour
     IEnumerator OnDamage()
     {
         OnDmg = true;
+        dmgAudio.Play();
         foreach (MeshRenderer mesh in meshs)
         {
             Material mat = mesh.material;
@@ -171,7 +181,7 @@ public class Player : MonoBehaviour
             Material mat = mesh.material;
             mat.color = Color.white;
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         OnDmg = false;
     }
     public void UpGrade(string str)

@@ -17,6 +17,8 @@ public class Enemy : MonoBehaviour
     [Tooltip(" ¸ó½ºÅÍº° Coin È®·ü")] public int coinDrop;
     [Tooltip(" YellowCoin È®·ü")]public int ramdomPro;
 
+    public AudioSource dieAudio;
+
     public int speedCnt = 0;
     public int damageCnt = 0;
     public int maxHpCnt = 0;
@@ -29,7 +31,7 @@ public class Enemy : MonoBehaviour
 
     Arrow arrow;
     public EnemySpear enemySpear;
-
+    public GameManager gManager;
     void Awake()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -70,11 +72,13 @@ public class Enemy : MonoBehaviour
                         GameObject coin = Instantiate(coinS, transform.position + randomVector, Quaternion.identity);
                     }
                 }
+                dieAudio.Play();
+                gManager.enemys--;
                 isDed = true;
                 agent.isStopped = true;
                 GetComponent<BoxCollider>().enabled = false;
                 anim.SetBool("isLive", false);
-                Destroy(gameObject , 1);     
+                Destroy(gameObject , 1);
             }
         }
     }
