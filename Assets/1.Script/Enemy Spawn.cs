@@ -30,6 +30,8 @@ public class EnemySpawn : MonoBehaviour
     public int basicSpawns = 0;
     public int basicBigspawns = 0;
 
+    public bool AllEnemiesSpawned { get; private set; } = false;
+
     int exTotal = 6;
     int exEneB = 2;
     int exEne = 1;
@@ -58,6 +60,7 @@ public class EnemySpawn : MonoBehaviour
     
     public void EnemyStage(int stageNum)
     {
+        AllEnemiesSpawned = false;
         int spawns = 0;
         int bigspawns = 0;
        
@@ -96,32 +99,37 @@ public class EnemySpawn : MonoBehaviour
         for (int i = 0; i < spawns; i++) 
         {
             if (!big)
-            {for (int j = 0; j < 2; j++)
+            {for (int j = 0; j < spawnPoint.Length; j++)
                 {
                     int spawnNum = Random.Range(0, enemys.Length);
                     GameObject Enemy = Instantiate(enemys[spawnNum], spawnPoint[j].position, Quaternion.identity);
 
                     Enemy ene = Enemy.GetComponent<Enemy>();
+                    ene.gManager = gManager;
                     ene.damage += damage;
                     ene.enemySpear.damage += damage;
                     ene.speed += speed;
                     ene.hp += hp;
+                    gManager.enemys++;
                 }
             }
             else
-            {for (int j = 0; j < 2; j++)
+            {for (int j = 0; j < spawnPoint.Length; j++)
                 {
                     GameObject Enemy = Instantiate(bigEnemy, spawnPoint[j].position, Quaternion.identity);
 
                     Enemy ene = Enemy.GetComponent<Enemy>();
+                    ene.gManager = gManager;
                     ene.damage += bigdamage;
                     ene.enemySpear.damage += bigdamage;
                     ene.speed += bigspeed;
                     ene.hp += bighp;
+                    gManager.enemys++;
                 }
             }
             yield return new WaitForSeconds(1f);
         }
+        AllEnemiesSpawned = true;
     }
 
     public void UpGrade(string str)
@@ -152,29 +160,32 @@ public class EnemySpawn : MonoBehaviour
         }
     }
     public void UpdateNextEnemy(bool Gacha)
-    {
-        if (!Gacha)
+    {  
+        if (gManager.stageClear)
         {
-            if (gManager.stageNum+1 < 3)
+            if (!Gacha)
             {
-                exEne += 2;
-                exEneB += 1;
+                if (gManager.stageNum + 1 < 3)
+                {
+                    exEne += 2;
+                    exEneB += 1;
+                }
+                else if (gManager.stageNum + 1 < 7)
+                {
+                    exEne += 3;
+                    exEneB += 2;
+                }
+                else
+                {
+                    exEne += 3;
+                    exEneB += 3;
+                }
             }
-            else if (gManager.stageNum+1 < 7)
-            {
-                exEne += 3;
-                exEneB += 2;
-            }
-            else
-            {
-                exEne += 3;
-                exEneB += 3;
-            }
-        }
-        exEne += spawnsUp;
-        exEneB += bigspawnsUp;
-        exTotal = (exEne + exEneB) * 2;
+            exEne += spawnsUp;
+            exEneB += bigspawnsUp;
+            exTotal = (exEne + exEneB) * 2;
 
-        exEnemy.text = "Next Enemy " + exTotal;
+            exEnemy.text = "Next Enemy " + exTotal;
+        }
     }
 }

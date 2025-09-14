@@ -7,10 +7,12 @@ public class Weapon : MonoBehaviour
     [Tooltip("화살")] public GameObject arrows;
     [Tooltip("스피드")] public float speed;
     public Transform arrowTrans;
+    public AudioSource audioS;
 
     float timer;
 
     public WeaponBack[] back;
+   
     void Awake()
     {
        
@@ -33,6 +35,7 @@ public class Weapon : MonoBehaviour
 
         arrowRigid.useGravity = true;               
         arrowRigid.linearVelocity = arrowTrans.forward * speed;
+        audioS.Play();
         if (back != null)
         {
             for(int i = 0; i< back.Length; i++)

@@ -15,6 +15,7 @@ public class RandomBox : MonoBehaviour
 
     public GameObject rotation;
     public GameObject ramdomPanel;
+    public AudioSource gachaAudio;
 
     public bool isOpen = false;
 
@@ -35,6 +36,7 @@ public class RandomBox : MonoBehaviour
     public void Gacha()
     {
         isOpen = true;
+        gachaAudio.Play();
         string boxName = "";
         Vector3 currentRotation = rotation.transform.eulerAngles;
         rotation.transform.eulerAngles = new Vector3(currentRotation.x, currentRotation.y, currentRotation.z + 140f);

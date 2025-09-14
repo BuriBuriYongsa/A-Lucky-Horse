@@ -52,9 +52,9 @@ public class GameManager : MonoBehaviour
     public bool gameStart = false;
     public bool stageClear;
     public int stageNum = 0;
-    bool stageReady = false;
+    public bool stageStarted = false;
 
-    public static int enemys; 
+    public int enemys = 0; 
 
     public Player player;
     public EnemySpawn enemySpawn;
@@ -74,12 +74,14 @@ public class GameManager : MonoBehaviour
         mainPanel.SetActive(false);
         defenses.SetActive(true);
         gamePanel.SetActive(true);
+        stagePanel.SetActive(false);
         StartCoroutine(GameTimer());
-        
+        gameStart = true;
     }
     public void GameReStart()
     {
         resetting();
+        player.gameObject.SetActive(true);
         mainPanel.SetActive(true);
         gameOverPanel.SetActive(false);
         gameSuccesPanel.SetActive(false);
@@ -89,7 +91,6 @@ public class GameManager : MonoBehaviour
     }
     public void GameSucces()
     {
-        stageClear = false;
         gameStart = false;
         stageNum = 0;
         GameObject[] coins = GameObject.FindGameObjectsWithTag("Coin");
@@ -103,8 +104,9 @@ public class GameManager : MonoBehaviour
     }
     public void NextStage()
     {
-        stageReady = true;
+        stageStarted = false;
         stageClear = false;
+        defenses.SetActive(true);
         stagePanel.SetActive(false);
         StartCoroutine(GameTimer());
     }
@@ -120,25 +122,27 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         gameTimerText.text = "Game Start!";
         gameTimer.SetActive(false);
-        gameStart = true;
-        stageNum++;
-        enemySpawn.EnemyStage(stageNum);
-
+        enemySpawn.EnemyStage(++stageNum);   // Enemy 코루틴 실행
+                                             // Enemy Spawn 코루틴이 실제로 모두 끝날 때까지 기다리기
+        yield return new WaitUntil(() => enemySpawn.AllEnemiesSpawned); // enemySpawn에 AllEnemiesSpawned bool 필요
+        stageStarted = true;
     }
 
     void LateUpdate()
     {
-        coinTxt.text = player.curCoin.ToString();
-        enemys = GameObject.FindGameObjectsWithTag("Enemy").Length;
-        if (enemys == 0 && gameStart && !stageReady)
+        if (stageStarted && enemySpawn.AllEnemiesSpawned && enemys == 0 && !stageClear)
         {
-            if(stageNum >= finalStage && stageClear)
+            stageClear = true;
+        }
+        coinTxt.text = player.curCoin.ToString();
+        if (stageClear)
+        {
+            if (stageNum == finalStage)
             {
                 GameSucces();
                 return;
             }
             defenses.SetActive(false);
-            stageClear = true;
             maxHp.text = player.hpUpcnt.ToString();
             arrowSpeedUp.text = player.arrowSpeedUpcnt.ToString();
             arrowDamageUp.text = player.dmgUpcnt.ToString();
@@ -149,9 +153,9 @@ public class GameManager : MonoBehaviour
             enemySpeedUp.text = enemySpawn.speedCnt.ToString();
             enemyDmgUp.text = enemySpawn.damageCnt.ToString();
             enemySpawnUp.text = enemySpawn.spawnsCnt.ToString();
-            if (player.isFloor && stageClear)stagePanel.SetActive(true);
+            if (player.isFloor)stagePanel.SetActive(true);
         }
-        enemyTxt.text = (enemys / 2).ToString();
+        enemyTxt.text = enemys.ToString();
 
         hpImg.localScale = new Vector3(player.curHp / player.maxHp, 1, 1);
         if (player.curHp <= 0)
@@ -164,6 +168,9 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         resetting();
+        stageClear = false;
+        gameStart = false;
+        gameOverPanel.SetActive(true);
         GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
         foreach(GameObject enemy in enemys)
         {
@@ -174,10 +181,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(coin);
         }
-        stageClear = false;
-        gameStart = false;
-        gameOverPanel.SetActive(true);
-
+ 
     }
     void PlayerSetting()
     {
@@ -191,9 +195,6 @@ public class GameManager : MonoBehaviour
 
         weaponBackAssis = player.assists[0].GetComponentInChildren<WeaponBack>();
         setAsisDamage = weaponBackAssis.arrows.GetComponent<Arrow>().damage;
-
-        Debug.Log(setBowDamage);
-        Debug.Log(setAsisDamage);
 
     }
     void resetting()
@@ -209,6 +210,7 @@ public class GameManager : MonoBehaviour
         player.dmgUpcnt = 0;
         player.hpUpcnt = 0;
         player.moveUpcnt = 0;
+        player.curCoin = 0;
         for (int i = 0; i <= 3; i++)
         {
             player.assists[i].SetActive(false);
