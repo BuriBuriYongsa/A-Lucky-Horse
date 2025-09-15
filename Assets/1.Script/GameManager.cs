@@ -30,9 +30,9 @@ public class GameManager : MonoBehaviour
     public int finalStage;
 
 
-    [Tooltip("µðÆæ½º ¿ÀºêÁ§Æ®")] public GameObject defenses;
+    [Tooltip("ï¿½ï¿½ï¿½æ½º ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")] public GameObject defenses;
 
-    //ÇÃ·¹ÀÌ¾î ±âº»½ºÅÈ
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½
     float setSpeed;
     float setHp;
     float setArrowSpeed;
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     int setAsisDamage;
     int setBowDamage;
 
-    //"Àû ±âº»½ºÅÈ
+    //"ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½
     float setEnemySpeed;
     float setBigEnemySpeed;
     float setEnemyDmg;
@@ -80,6 +80,7 @@ public class GameManager : MonoBehaviour
     }
     public void GameReStart()
     {
+        stageNum = 0;
         resetting();
         player.gameObject.SetActive(true);
         mainPanel.SetActive(true);
@@ -87,7 +88,6 @@ public class GameManager : MonoBehaviour
         gameSuccesPanel.SetActive(false);
         stagePanel.SetActive(false);
         gamePanel.SetActive(false);
-        stageNum = 0;
     }
     public void GameSucces()
     {
@@ -122,14 +122,14 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         gameTimerText.text = "Game Start!";
         gameTimer.SetActive(false);
-        enemySpawn.EnemyStage(++stageNum);   // Enemy ÄÚ·çÆ¾ ½ÇÇà
-                                             // Enemy Spawn ÄÚ·çÆ¾ÀÌ ½ÇÁ¦·Î ¸ðµÎ ³¡³¯ ¶§±îÁö ±â´Ù¸®±â
-        yield return new WaitUntil(() => enemySpawn.AllEnemiesSpawned); // enemySpawn¿¡ AllEnemiesSpawned bool ÇÊ¿ä
+        enemySpawn.EnemyStage(++stageNum);   
+        yield return new WaitUntil(() => enemySpawn.AllEnemiesSpawned);
         stageStarted = true;
     }
 
     void LateUpdate()
     {
+        if(!gameStart) return;
         if (stageStarted && enemySpawn.AllEnemiesSpawned && enemys == 0 && !stageClear)
         {
             stageClear = true;
