@@ -202,6 +202,7 @@ public class GameManager : MonoBehaviour
     }
     void resetting()
     {
+        player.maxHp = 100;
         player.curHp = setHp;
         player.speed = setSpeed;
         player.turnSpeed = setSpeed;
