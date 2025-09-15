@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class Heart : MonoBehaviour
 {
@@ -15,7 +17,7 @@ public class Heart : MonoBehaviour
                 if(player.curHp >= 100)return;
                 
                 heartPanel.SetActive(true);
-                int upHp = player.maxHp / 100 * 10;
+                float upHp = player.maxHp / 100 * 10;
                 StartCoroutine(HpUp(upHp));
             }
            
@@ -26,12 +28,12 @@ public class Heart : MonoBehaviour
         if (other.gameObject.tag == "Player") heartPanel.SetActive(false);
     }
 
-    IEnumerator HpUp(int upHp)
+    IEnumerator HpUp(float upHp)
     {
         player.curCoin -= 50;
         player.curHp += upHp;
-        if(player.curHp > 100) player.curHp = 100; 
-        yield WaitForSeconds(0.5f);
+        if(player.curHp > 100) player.curHp = 100;
+        yield return new WaitForSeconds(0.5f);
     }
 
 }
