@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverPanel;
     public GameObject gameSuccesPanel;
     public GameObject gameTimer;
+    public GameObject nextEnemyPanel;
     public Text coinTxt;
     public Text enemyTxt;
     public RectTransform hpImg;
@@ -30,9 +31,9 @@ public class GameManager : MonoBehaviour
     public int finalStage;
 
 
-    [Tooltip("���潺 ������Ʈ")] public GameObject defenses;
+    [Tooltip("벽 활성화")] public GameObject defenses;
 
-    //�÷��̾� �⺻����
+
     float setSpeed;
     float setHp;
     float setArrowSpeed;
@@ -40,7 +41,7 @@ public class GameManager : MonoBehaviour
     int setAsisDamage;
     int setBowDamage;
 
-    //"�� �⺻����
+    
     float setEnemySpeed;
     float setBigEnemySpeed;
     float setEnemyDmg;
@@ -49,6 +50,8 @@ public class GameManager : MonoBehaviour
     float setBigEnemyHp;
     float setSqawn;
 
+
+    public bool playerDie = false;
     public bool gameStart = false;
     public bool stageClear;
     public int stageNum = 0;
@@ -63,6 +66,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         stageClear = false;
+        nextEnemyPanel.SetActive(false);
         mainPanel.SetActive(true);
         gameSuccesPanel.SetActive(false);
         gamePanel.SetActive(false);
@@ -76,29 +80,17 @@ public class GameManager : MonoBehaviour
         gamePanel.SetActive(true);
         stagePanel.SetActive(false);
         StartCoroutine(GameTimer());
+        stageStarted = false;
+        playerDie = false;
         gameStart = true;
     }
     public void GameReStart()
     {
         stageNum = 0;
-        resetting();
         player.gameObject.SetActive(true);
         mainPanel.SetActive(true);
         gameOverPanel.SetActive(false);
         gameSuccesPanel.SetActive(false);
-        stagePanel.SetActive(false);
-        gamePanel.SetActive(false);
-    }
-    public void GameSucces()
-    {
-        gameStart = false;
-        stageNum = 0;
-        GameObject[] coins = GameObject.FindGameObjectsWithTag("Coin");
-        foreach (GameObject coin in coins)
-        {
-            Destroy(coin);
-        }
-        gameSuccesPanel.SetActive(true);
         stagePanel.SetActive(false);
         gamePanel.SetActive(false);
     }
@@ -139,7 +131,8 @@ public class GameManager : MonoBehaviour
         {
             if (stageNum == finalStage)
             {
-                GameSucces();
+                playerDie = false;
+                GameOver();
                 return;
             }
             defenses.SetActive(false);
@@ -160,6 +153,7 @@ public class GameManager : MonoBehaviour
         hpImg.localScale = new Vector3(player.curHp / player.maxHp, 1, 1);
         if (player.curHp <= 0)
         {
+            playerDie = true;
             GameOver();
         }
         
@@ -167,21 +161,30 @@ public class GameManager : MonoBehaviour
     
     void GameOver()
     {
-        resetting();
-        stageClear = false;
-        gameStart = false;
-        gameOverPanel.SetActive(true);
         GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach(GameObject enemy in enemys)
-        {
-            Destroy(enemy);
-        }
         GameObject[] coins = GameObject.FindGameObjectsWithTag("Coin");
+        if (playerDie)
+        {
+            gameOverPanel.SetActive(true);
+            foreach (GameObject enemy in enemys)
+            {
+                Destroy(enemy);
+            }
+        }
+        else
+        {
+            gameSuccesPanel.SetActive(true);
+        }
         foreach (GameObject coin in coins)
         {
             Destroy(coin);
         }
- 
+        resetting();
+        stageClear = false;
+        gameStart = false;
+        nextEnemyPanel.SetActive(false);
+        stagePanel.SetActive(false);
+        gamePanel.SetActive(false);
     }
     void PlayerSetting()
     {
