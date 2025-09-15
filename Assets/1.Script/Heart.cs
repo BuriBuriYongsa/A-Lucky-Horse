@@ -6,11 +6,13 @@ public class Heart : MonoBehaviour
 {
     public Player player;
     public GameObject heartPanel;
+    public bool hpUping = false;
 
     void OnCollisionStay(Collision other)
     {
         if (other.gameObject.tag == "Player")
         {
+            if(hpUping)return;
             heartPanel.SetActive(true);
             if (player.curCoin >= 50 && player.isTouch)
             {
@@ -33,7 +35,9 @@ public class Heart : MonoBehaviour
         player.curCoin -= 50;
         player.curHp += upHp;
         if(player.curHp > 100) player.curHp = 100;
-        yield return new WaitForSeconds(0.5f);
+        hpUping = true;
+        yield return new WaitForSeconds(1f);
+        hpUping = false;
     }
 
 }
