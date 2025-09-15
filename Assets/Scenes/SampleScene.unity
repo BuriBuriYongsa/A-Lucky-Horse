@@ -26702,6 +26702,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 219569040}
     - target: {fileID: 8883310582950592868, guid: 5de85533520583244b8946f61e4a1d87, type: 3}
+      propertyPath: nextEnemyPanel
+      value: 
+      objectReference: {fileID: 1508752199}
+    - target: {fileID: 8883310582950592868, guid: 5de85533520583244b8946f61e4a1d87, type: 3}
       propertyPath: gameSuccesPanel
       value: 
       objectReference: {fileID: 647586189}
