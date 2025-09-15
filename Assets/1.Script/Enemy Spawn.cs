@@ -161,6 +161,11 @@ public class EnemySpawn : MonoBehaviour
     }
     public void UpdateNextEnemy(bool Gacha)
     {  
+        if(!gManager.gameStart) 
+        {
+            exEnemy.text = "";
+            return;
+        }
         if (gManager.stageClear)
         {
             if (!Gacha)
